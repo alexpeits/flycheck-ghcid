@@ -68,8 +68,9 @@ and warnings in haskell buffers."
   ((eval (flycheck-ghcid-get-checker-executable))
    (eval (my/flycheck-haskell-get-default-directory)))
   :error-patterns
-  ((warning line-start (file-name) ":" line ":" column ":"
-            (or " " "\n    ") (in "Ww") "arning:"
+  ((warning line-start (file-name) ":" line ":"
+            column (optional "-" (one-or-more digit))
+            ":" (or " " "\n    ") (in "Ww") "arning:"
             (optional " " "[" (id (one-or-more not-newline)) "]")
             (optional "\n")
             (message
@@ -77,7 +78,9 @@ and warnings in haskell buffers."
              (zero-or-more "\n"
                            (one-or-more " ")
                            (one-or-more (not (any ?\n ?|))))))
-   (error line-start (file-name) ":" line ":" column ": error:"
+   (error line-start (file-name) ":" line ":"
+          column (optional "-" (one-or-more digit))
+          ": error:"
           (or (message (one-or-more not-newline))
               (and "\n"
                    (message
